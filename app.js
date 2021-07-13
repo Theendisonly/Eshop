@@ -8,8 +8,10 @@ const morgan = require('morgan');
 const mongoose = require('mongoose');
 const cors = require('cors');
 
-const productsRouter = require('./routers/products');
-const categoriesRouter = require('./routers/categories');
+const productsRoutes = require('./routers/products');
+const categoriesRoutes = require('./routers/categories');
+const usersRoutes = require('./routers/users');
+// const orderRoutes = require('./routers/orders');
 
 
 app.use(cors());
@@ -20,9 +22,12 @@ app.use(express.json());
 app.use(morgan('tiny'));
 
 //Routers
-app.use(`${api}/products`, productsRouter);
-app.use(`${api}/categories`, categoriesRouter);
+app.use(`${api}/products`, productsRoutes);
+app.use(`${api}/categories`, categoriesRoutes);
+app.use(`${api}/users`, usersRoutes);
+// app.use(`${api}/orders`, orderRoutes);
 
+//database is in the cloud
 mongoose.connect(conn,{
     useNewUrlParser: true,
     useUnifiedTopology: true,

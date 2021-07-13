@@ -5,11 +5,15 @@ const { Product } = require("../models/product");
 const mongoose = require('mongoose');
 
 router.get(`/`, async (req, res) => {
-  const productList = await Product.find();
+  let filter = {}
+  if(req.query.categories){
+    filter = {category: req.query.categories.split(',')}
+  }
+  const productList = await Product.find(filter).populate('category');
   //   const productList = await Product.find().select('name image -_id');
 
   if (!productList) {
-    res.status(500).json({ error: err, succes: false });
+    res.status(500).json({ error: err, success: false });
   }
   res.send(productList);
 });
@@ -29,10 +33,22 @@ router.get(`/get/count`, async (req, res) => {
   const productCount = await Product.countDocuments((count) => count);
 
   if (!productCount) {
-    res.status(500).json({ error: err, succes: false });
+    res.status(500).json({ error: err, success: false });
   }
   res.send({
     productCount: productCount
+  });
+});
+
+router.get(`/get/featured/:count`, async (req, res) => {
+  const count = req.params.count ? req.params.count : 0
+  const products = await Product.find({isFeatured: true}).limit(+count);
+
+  if (!products) {
+    res.status(500).json({ error: err, success: false });
+  }
+  res.send({
+    products
   });
 });
 
@@ -102,7 +118,7 @@ router.put("/:id", async (req, res) => {
 })
 
 router.delete('/:id', (req, res)=>{
-    Category.findByIdAndRemove(req.params.id)
+    Product.findByIdAndRemove(req.params.id)
     .then(product => {
         if(product){
             return res.status(200).json({success: true, message: 'the product was deleted'})

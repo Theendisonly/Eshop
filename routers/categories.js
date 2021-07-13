@@ -6,7 +6,7 @@ router.get(`/`,async (req,res)=>{
     const categoryList = await Category.find();
 
     if(!categoryList){
-        res.status(500).json({error: err,succes: false})
+        res.status(500).json({error: err,success: false})
     }
     res.status(200).send(categoryList);
 })
@@ -54,7 +54,7 @@ router.put('/:id', async (req, res) =>{
     )
 
     if(!category)
-        return res.status(404).send('the category cannot be created!');
+        return res.status(404).send('the category cannot be updated!');
     
     res.send(category);
 })
