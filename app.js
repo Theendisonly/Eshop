@@ -6,7 +6,10 @@ const api = process.env.API_URL;
 const conn = process.env.CONNECTION_STRING;
 const morgan = require('morgan');
 const mongoose = require('mongoose');
+
 const cors = require('cors');
+const authJwt = require('./helpers/jwt');
+const errorHandler = require('./helpers/error-handler')
 
 const productsRoutes = require('./routers/products');
 const categoriesRoutes = require('./routers/categories');
@@ -20,6 +23,8 @@ app.options('*', cors());
 //middleware
 app.use(express.json());
 app.use(morgan('tiny'));
+app.use(authJwt());
+app.use(errorHandler);
 
 //Routers
 app.use(`${api}/products`, productsRoutes);
